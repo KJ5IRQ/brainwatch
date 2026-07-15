@@ -1,0 +1,25 @@
+# Copy this file to ~/.config/brainwatch/config.toml.
+
+[brainwatch]
+request_timeout_seconds = 25
+overall_timeout_seconds = 240
+max_workers = 4
+
+[[providers]]
+name = "openrouter"
+kind = "openrouter"
+api_key_env = "OPENROUTER_API_KEY"
+
+[[providers]]
+name = "local-lab"
+kind = "openai-compatible"
+base_url = "http://127.0.0.1:8000"
+api_key_env = "LOCAL_LAB_API_KEY"
+free_models = ["example-small", "example-coder"]
+
+[[providers]]
+name = "remote-friend"
+kind = "openai-compatible"
+base_url = "https://models.example.test"
+api_key_env = "EXAMPLE_PROVIDER_API_KEY"
+free_models = ["example-free-model"]
