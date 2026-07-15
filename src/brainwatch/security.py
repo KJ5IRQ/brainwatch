@@ -13,7 +13,7 @@ class SecretError(RuntimeError):
 
 _TOKEN_PATTERNS = (
     re.compile(r"(?i)(Bearer\s+)[A-Za-z0-9._~+/=-]+"),
-    re.compile(r"\bsk-(?:or-v1-)?[A-Za-z0-9_-]{8,}\b"),
+    re.compile(r"\b(?:sk-(?:or-v1-|ant-)?|gsk_|pplx-|xai-|gh[pours]_-?|xox[abp]-)[A-Za-z0-9_-]{8,}\b"),
 )
 
 

@@ -62,7 +62,7 @@ def tracked_files(root: Path) -> list[Path]:
         raise RuntimeError("git executable not found")
     # Executable is resolved above; arguments and cwd are fixed by this repository.
     result = subprocess.run(  # noqa: S603
-        [git, "ls-files", "-z"],
+        [git, "ls-files", "-z", "--"],
         cwd=root,
         check=True,
         capture_output=True,

@@ -135,6 +135,19 @@ def _provider(raw: object) -> ProviderConfig:
     )
 
 
+def resolve_data_dir(
+    data_dir: str | Path | None = None,
+    environ: Mapping[str, str] | None = None,
+) -> Path:
+    """Resolve the Brainwatch state directory from args and environment.
+
+    Precedence: explicit *data_dir* argument, ``BRAINWATCH_HOME`` env var,
+    XDG default.
+    """
+    env = os.environ if environ is None else environ
+    return Path(data_dir or env.get("BRAINWATCH_HOME", "")).expanduser() or default_data_dir(env)
+
+
 def load_settings(
     path: str | Path | None = None,
     data_dir: str | Path | None = None,

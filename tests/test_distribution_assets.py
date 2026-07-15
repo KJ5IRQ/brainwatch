@@ -31,13 +31,17 @@ def test_synthetic_examples_are_valid_json() -> None:
 
 
 def test_systemd_units_are_user_level_and_bounded() -> None:
-    service = (ROOT / "deploy" / "systemd" / "brainwatch.service").read_text()
-    timer = (ROOT / "deploy" / "systemd" / "brainwatch.timer").read_text()
+    deploy = ROOT / "deploy" / "systemd"
+    service = (deploy / "brainwatch.service").read_text()
+    timer = (deploy / "brainwatch.timer").read_text()
     assert "User=" not in service
     assert "brainwatch health --retain 5000" in service
     assert "NoNewPrivileges=true" in service
+    assert "UMask=0077" in service
+    assert "TimeoutStartSec=300" in service
     assert "OnBootSec=5m" in timer
     assert "OnUnitActiveSec=6h" in timer
+    assert (deploy / "brainwatch.env.example").is_file()
 
 
 def test_readme_contains_install_and_first_run_commands() -> None:

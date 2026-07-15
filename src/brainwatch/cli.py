@@ -9,7 +9,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import __version__
-from .config import ConfigError, Settings, default_data_dir, load_settings
+from .config import ConfigError, Settings, load_settings, resolve_data_dir
 from .health import run_health
 from .integrations import openclaw
 from .storage import StoragePaths
@@ -154,7 +154,7 @@ def _chain(args: argparse.Namespace) -> int:
 
 
 def _openclaw(args: argparse.Namespace) -> int:
-    paths = StoragePaths.from_root(args.data_dir or default_data_dir())
+    paths = StoragePaths.from_root(resolve_data_dir(data_dir=args.data_dir))
     if args.openclaw_command == "status":
         result = openclaw.status(
             config_path=args.openclaw_config,
