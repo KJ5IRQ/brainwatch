@@ -7,6 +7,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from .storage import atomic_write_text
+
 
 def load_usage(path: str | Path) -> list[dict[str, object]]:
     target = Path(path)
@@ -82,3 +84,29 @@ def rank_by_instability(
         reverse=True,
     )
     return items
+
+
+def write_report(
+    stats: dict[str, dict[str, object]],
+    ranked: list[dict[str, object]],
+    *,
+    path: str | Path,
+) -> str:
+    record_count = sum(int(item.get("probes", 0)) for item in stats.values())
+    lines = [
+        f"probe_records={record_count} models={len(stats)}",
+        "worst-first by fail rate and current failure streak",
+        "",
+        f"{'MODEL':44} {'PASS':>4} {'FAIL':>4} {'RATE':>5} {'STREAK':>7}  LAST",
+    ]
+    for item in ranked:
+        model = str(item.get("model_key", ""))[:44]
+        rate = f"{float(item.get('fail_rate', 0)) * 100:.0f}%"
+        lines.append(
+            f"{model:44} {int(item.get('passes', 0)):>4} "
+            f"{int(item.get('fails', 0)):>4} {rate:>5} "
+            f"{int(item.get('streak_fails', 0)):>7}  {item.get('last_status', 'unknown')}"
+        )
+    text = "\n".join(lines) + "\n"
+    atomic_write_text(path, text, mode=0o600)
+    return text
