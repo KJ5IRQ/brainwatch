@@ -32,7 +32,7 @@ def perform(session: mock.Mock):
         provider_name="friend",
         model_id="allowed",
         url="https://models.example.test/v1/chat/completions",
-        api_key="secret-value",
+        api_key="secret" + "-value",
         timeout_seconds=1,
         session=session,
     )

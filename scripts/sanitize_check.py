@@ -44,7 +44,7 @@ _RULES = (
     ("private key material", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
 )
 
-_SKIP_PREFIXES = ("docs/superpowers/", "tests/")
+_SKIP_PREFIXES = ("docs/superpowers/",)
 
 
 def scan_text(path: str, text: str) -> list[Finding]:

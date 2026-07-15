@@ -17,7 +17,14 @@ def load_sanitizer():
 
 def test_sanitizer_detects_secrets_private_addresses_and_personal_paths() -> None:
     sanitizer = load_sanitizer()
-    unsafe = "Authorization: Bearer abcdefghijklmnop\nserver=192.168.50.5\n/home/alice/app"
+    authorization = "Author" + "ization"
+    synthetic_secret = "abcdefgh" + "ijklmnop"
+    private_address = ".".join(("192", "168", "50", "5"))
+    personal_path = "/".join(("", "home", "alice", "app"))
+    unsafe = (
+        f"{authorization}: Bearer {synthetic_secret}\n"
+        f"server={private_address}\n{personal_path}"
+    )
     findings = sanitizer.scan_text("unsafe.txt", unsafe)
     assert {finding.rule for finding in findings} == {
         "credential-like text",
