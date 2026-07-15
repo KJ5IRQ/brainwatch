@@ -71,8 +71,8 @@ Edit the copied file. Remove providers you do not use. Then export only the keys
 needed by the enabled providers:
 
 ```bash
-export OPENROUTER_API_KEY='your-provider-key'
-export EXAMPLE_PROVIDER_API_KEY='another-provider-key'
+read -rsp 'OpenRouter API key: ' OPENROUTER_API_KEY && export OPENROUTER_API_KEY
+printf '\n'
 ```
 
 Do not put key values in `config.toml`. Configuration stores environment-variable

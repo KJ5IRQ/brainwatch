@@ -89,13 +89,14 @@ requires the variable so provider configuration remains explicit.
 Configuration contains the variable name, never its value:
 
 ```bash
-export OPENROUTER_API_KEY='provider-key-value'
+read -rsp 'OpenRouter API key: ' OPENROUTER_API_KEY && export OPENROUTER_API_KEY
+printf '\n'
 ```
 
 For systemd, use a private environment file:
 
 ```text
-OPENROUTER_API_KEY=provider-key-value
+OPENROUTER_API_KEY=<set-locally>
 ```
 
 ```bash
