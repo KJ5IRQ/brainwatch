@@ -1,0 +1,21 @@
+[Unit]
+Description=Probe verified-free model availability with Brainwatch
+Documentation=https://github.com/KJ5IRQ/brainwatch
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/brainwatch/env
+ExecStart=%h/.local/bin/brainwatch health --retain 5000
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.local/share/brainwatch
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=default.target

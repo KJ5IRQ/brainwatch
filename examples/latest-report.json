@@ -1,0 +1,55 @@
+{
+  "all_results": [
+    {
+      "attempts": 1,
+      "completion_tokens": 8,
+      "context_length": 32768,
+      "error": null,
+      "http_status": 200,
+      "latency_ms": 140.5,
+      "mode": "content",
+      "model_id": "sample-free",
+      "model_key": "sample-provider:sample-free",
+      "parsed_ok": true,
+      "prompt_tokens": 18,
+      "provider": "sample-provider",
+      "recovered": false,
+      "stability": null,
+      "status": "ok",
+      "tags": ["general"],
+      "timestamp": 1784073601.0
+    }
+  ],
+  "candidate_count": 1,
+  "estimated_paid_spend_usd": 0.0,
+  "failed_or_refused": 0,
+  "generated_at": 1784073602.0,
+  "generated_at_iso": "2026-07-15T00:00:02Z",
+  "generator": "brainwatch",
+  "passed": 1,
+  "probed": 1,
+  "proposed_chain": [
+    {
+      "context_length": 32768,
+      "latency_ms": 140.5,
+      "model_id": "sample-free",
+      "model_key": "sample-provider:sample-free",
+      "provider": "sample-provider",
+      "rank": 1,
+      "reason": "verified_zero_cost; context=32768; status=ok; latency=140.5ms; tags=general",
+      "score": 0.8123,
+      "tags": ["general"]
+    }
+  ],
+  "providers": {
+    "sample-provider": {
+      "candidates": 1,
+      "error": null,
+      "passed": 1,
+      "probed": 1,
+      "refused": 0
+    }
+  },
+  "schema_version": 1,
+  "spend_policy": "verified_zero_only"
+}
