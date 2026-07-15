@@ -1,0 +1,29 @@
+name: Feature request
+description: Propose a focused Brainwatch improvement
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the operator problem, not only the preferred implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Spend and security implications
+      description: Explain effects on model eligibility, credentials, network access, or file writes.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

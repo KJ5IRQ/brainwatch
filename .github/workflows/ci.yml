@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+      - name: Install locked development environment
+        run: uv sync --locked --extra dev
+      - name: Lint
+        run: uv run ruff check src tests scripts
+      - name: Test
+        run: uv run pytest -q
+      - name: Sanitize repository
+        run: uv run python scripts/sanitize_check.py
+      - name: Build distributions
+        run: uv build
+      - name: Smoke-test wheel
+        shell: bash
+        run: |
+          python -m venv /tmp/brainwatch-smoke
+          /tmp/brainwatch-smoke/bin/pip install dist/*.whl
+          /tmp/brainwatch-smoke/bin/brainwatch --version

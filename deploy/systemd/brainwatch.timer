@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Brainwatch every six hours
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=6h
+RandomizedDelaySec=10m
+Persistent=true
+Unit=brainwatch.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,2 @@
+{"candidate_count":2,"candidates":["sample-provider:sample-free","sample-provider:sample-coder"],"provider_errors":{},"timestamp":1784073600.0}
+{"candidate_count":1,"candidates":["sample-provider:sample-free"],"provider_errors":{"offline-sample":"synthetic catalog failure"},"timestamp":1784095200.0}

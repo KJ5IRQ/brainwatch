@@ -1,0 +1,12 @@
+BRAINWATCH MODEL AVAILABILITY REPORT
+generated_at: 2026-07-15T00:00:02Z
+policy: verified-zero-cost policy; unknown-cost models are not probed
+
+candidates: 1
+probed: 1
+passed: 1
+failed_or_refused: 0
+
+PROPOSED VERIFIED-FREE CHAIN
+  1. sample-provider:sample-free score=0.8123 latency=140.5ms
+     verified_zero_cost; context=32768; status=ok; latency=140.5ms; tags=general
