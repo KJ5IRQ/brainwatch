@@ -9,8 +9,9 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import __version__
-from .config import ConfigError, Settings, load_settings
+from .config import ConfigError, Settings, default_data_dir, load_settings
 from .health import run_health
+from .integrations import openclaw
 from .storage import StoragePaths
 from .trend import load_usage, rank_by_instability, stability, write_report
 
@@ -45,6 +46,20 @@ def build_parser() -> argparse.ArgumentParser:
 
     chain = subparsers.add_parser("chain", help="show the proposed chain")
     chain.add_argument("--format", choices=("json", "openclaw"), default="json")
+
+    openclaw_parser = subparsers.add_parser("openclaw", help="inspect or update OpenClaw")
+    openclaw_commands = openclaw_parser.add_subparsers(
+        dest="openclaw_command", required=True
+    )
+    openclaw_status = openclaw_commands.add_parser(
+        "status", help="compare an OpenClaw chain with current evidence"
+    )
+    openclaw_status.add_argument("--config", dest="openclaw_config", required=True)
+    openclaw_apply = openclaw_commands.add_parser(
+        "apply", help="apply the proposed chain with a protected backup"
+    )
+    openclaw_apply.add_argument("--config", dest="openclaw_config", required=True)
+    openclaw_apply.add_argument("--yes", action="store_true", help="confirm the write")
     return parser
 
 
@@ -138,6 +153,28 @@ def _chain(args: argparse.Namespace) -> int:
     return 0
 
 
+def _openclaw(args: argparse.Namespace) -> int:
+    paths = StoragePaths.from_root(args.data_dir or default_data_dir())
+    if args.openclaw_command == "status":
+        result = openclaw.status(
+            config_path=args.openclaw_config,
+            latest_path=paths.latest_report,
+        )
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return 0 if result["all_passing"] else 2
+    chain = _read_json(paths.proposed_chain)
+    if not isinstance(chain, list) or not all(isinstance(item, dict) for item in chain):
+        raise CommandError("proposed chain evidence must be a list of objects")
+    result = openclaw.apply_chain(
+        chain,
+        config_path=args.openclaw_config,
+        backup_dir=paths.backups_dir,
+        confirmed=args.yes,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -150,6 +187,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "status": _status,
         "trend": _trend,
         "chain": _chain,
+        "openclaw": _openclaw,
     }
     if args.command is None:
         parser.print_help()

@@ -97,3 +97,42 @@ def test_health_missing_key_names_variable_without_secret_value(
     captured = capsys.readouterr()
     assert "FRIEND_API_KEY" in captured.err
     assert "secret-value" not in captured.err
+
+
+def test_openclaw_apply_requires_yes_and_then_updates(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    from brainwatch.cli import main
+
+    state = tmp_path / "state"
+    reports = state / "reports"
+    reports.mkdir(parents=True)
+    (reports / "proposed-chain.json").write_text(
+        json.dumps([{"provider": "friend", "model_id": "free"}])
+    )
+    target = tmp_path / "openclaw.json"
+    target.write_text(
+        json.dumps(
+            {
+                "agents": {
+                    "defaults": {
+                        "model": {"primary": "old/model", "fallbacks": []}
+                    }
+                }
+            }
+        )
+    )
+    command = [
+        "--data-dir",
+        str(state),
+        "openclaw",
+        "apply",
+        "--config",
+        str(target),
+    ]
+    assert main(command) == 1
+    assert "--yes" in capsys.readouterr().err
+    assert main([*command, "--yes"]) == 0
+    capsys.readouterr()
+    model = json.loads(target.read_text())["agents"]["defaults"]["model"]
+    assert model == {"primary": "friend/free", "fallbacks": []}
