@@ -184,7 +184,7 @@ platform permits it.
 Generic user-level systemd units are in `deploy/systemd/`:
 
 ```bash
-mkdir -p ~/.config/systemd/user
+mkdir -p ~/.config/systemd/user ~/.local/share/brainwatch
 cp deploy/systemd/brainwatch.service deploy/systemd/brainwatch.timer \
   ~/.config/systemd/user/
 systemctl --user daemon-reload
